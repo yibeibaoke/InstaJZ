@@ -1,5 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <div>
-    <a href="{% url 'post_update' object.id %}"> Update Post</a>
+    <a class="update-post" href="{% url 'post_update' object.id %}"> Update Post</a>
     <a href="{% url 'post_delete' object.id %}"> Delete Post</a>
 
 </div>
@@ -7,3 +11,4 @@
 <p> {{ object.title }} </p>
 <image src="/{{object.image}}">
 
+{% endblock content %}
