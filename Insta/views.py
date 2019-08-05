@@ -5,7 +5,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from Insta.forms import CustomUserCreationForm
-from Insta.models import Post, Like
+from Insta.models import InstaUser, Like, Post, UserConnection
 
 
 class HelloWorld(TemplateView):
@@ -15,9 +15,20 @@ class PostsView(ListView):
     model = Post
     template_name = 'index.html'
 
+    def get_queryset(self):
+        current_user = self.request.user
+        following = set()
+        for conn in UserConnection.objects.filter(creator=current_user).select_related('following'):
+            following.add(conn.following)
+        return Post.objects.filter(author__in=following)
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post_detail.html'
+
+class UserDetailView(DetailView):
+    model = InstaUser
+    template_name = 'user_detail.html'
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
